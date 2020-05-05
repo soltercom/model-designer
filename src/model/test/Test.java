@@ -20,7 +20,7 @@ public class Test {
         factory.createNewSimpleAttribute(recipeLine, "ЕдиницаИзмерения", measureModel);
         factory.createNewSimpleAttribute(recipeLine, "Количество", factory.getPredefinedModel(NumberModel.NAME));
 
-        System.out.println(factory.getRootNode().printMetadata(0));
+        //System.out.println(factory.getRootNode().printMetadata(0));
     }
 
 }

@@ -63,7 +63,7 @@ public class MetadataFactory {
         return attribute;
     }
     public Attribute createNewSimpleAttribute(SimpleModel parent) {
-        return createNewSimpleAttribute(parent, getRootNode().getUniqueName(), getRootNode().getDefaultModel());
+        return createNewSimpleAttribute(parent, parent.getProperty(AttributeNode.NAME).getUniqueName(), getRootNode().getDefaultModel());
     }
 
     public List<Attribute> createPredefinedAttributes(Metadata parent) {
