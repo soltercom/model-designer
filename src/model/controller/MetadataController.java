@@ -91,8 +91,7 @@ public class MetadataController {
         }
     }
 
-    private TreeView<Metadata> initTreeView() {
-
+    private TreeItem<Metadata> getTreeItems() {
         TreeItem<Metadata> rootItem = new TreeItem<>(getRootNode());
         rootItem.setExpanded(true);
 
@@ -115,27 +114,40 @@ public class MetadataController {
             }
         }
 
-        TreeView<Metadata> treeView = new TreeView<>(rootItem);
+        return rootItem;
+    }
+
+    private TreeItem<Metadata> getTreeItem(TreeItem<Metadata> parent, Metadata metadata) {
+        for(TreeItem<Metadata> item: parent.getChildren()) {
+            if (item.getValue().equals(metadata)) {
+                return item;
+            }
+            TreeItem<Metadata> res = getTreeItem(item, metadata);
+            if (res != null) return res;
+        }
+        return null;
+    }
+
+    private TreeView<Metadata> initTreeView() {
+
+        TreeView<Metadata> treeView = new TreeView<>(getTreeItems());
 
         final ContextMenu contextMenu = new ContextMenu();
         MenuItem itemAdd = new MenuItem("Добавить");
-        itemAdd.setOnAction(event -> {});
+        itemAdd.setOnAction(event -> {
+            Metadata metadata = MetadataFactory.getInstance().createNewMetadata(selectedTreeItem.getValue());
+            treeView.setRoot(getTreeItems());
+            treeView.getSelectionModel().select(getTreeItem(treeView.getRoot(), metadata));
+        });
         contextMenu.getItems().add(itemAdd);
         treeView.setContextMenu(contextMenu);
 
-        treeView.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<TreeItem<Metadata>>() {
-            @Override
-            public void changed(ObservableValue<? extends TreeItem<Metadata>> observableValue, TreeItem<Metadata> oldValue, TreeItem<Metadata> newValue) {
-                selectedTreeItem = newValue;
-                fireEvent(MetadataControllerEvent.selectedMetadataChanged());
-            }
+        treeView.getSelectionModel().selectedItemProperty().addListener((observableValue, oldValue, newValue) -> {
+            selectedTreeItem = newValue;
+            fireEvent(MetadataControllerEvent.selectedMetadataChanged());
         });
 
         return treeView;
-    }
-
-    public BorderPane getNewPropertyForm() {
-        return null;
     }
 
     public BorderPane getPropertyForm() {
@@ -143,8 +155,7 @@ public class MetadataController {
     }
 
     private BorderPane getPropertyForm(Metadata metadata) {
-
-        MetadataForm metadataForm = null;
+        MetadataForm metadataForm;
         if (metadata instanceof RootNode)
             metadataForm = new RootNodeForm(metadata);
         else if (metadata instanceof Model)
@@ -156,7 +167,6 @@ public class MetadataController {
         metadataForm.getFormInstance()
                 .addEventHandler(FormEvent.EVENT_FORM_PERSISTED, e -> getTreeView().refresh());
         return new MetadataPane(metadataForm);
-
     }
 
 

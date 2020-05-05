@@ -11,17 +11,16 @@ import java.util.Objects;
 
 public class SimpleModel extends Model {
 
-    public SimpleModel(String name) {
-        super(name, false);
+    public SimpleModel(Metadata parent, String name) {
+        super(parent, name, false);
 
-        MetadataFactory factory = MetadataFactory.getInstance();
-        add(factory.createRefAttribute());
-        add(factory.createNameAttribute());
-        add(factory.createAttributeNode());
+        MetadataFactory.getInstance()
+            .createPredefinedAttributes(this).forEach(super::add);
+        add(MetadataFactory.getInstance().createAttributeNode(this));
     }
 
     public boolean addAttribute(Attribute attribute) {
-        Node node = Objects.requireNonNull((Node)getProperty(AttributeNode.name));
+        Node node = Objects.requireNonNull((Node)getProperty(AttributeNode.NAME));
         return node.add(attribute);
     }
 

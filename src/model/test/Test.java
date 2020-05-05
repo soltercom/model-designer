@@ -4,6 +4,7 @@ import model.controller.MetadataController;
 import model.core.attribute.SimpleAttribute;
 import model.core.factory.MetadataFactory;
 import model.core.model.Model;
+import model.core.model.NumberModel;
 import model.core.model.SimpleModel;
 
 public class Test {
@@ -17,9 +18,9 @@ public class Test {
 
         factory.createNewSimpleAttribute(recipeLine, "Ингредиент", ingredientModel);
         factory.createNewSimpleAttribute(recipeLine, "ЕдиницаИзмерения", measureModel);
-        factory.createNewSimpleAttribute(recipeLine, "Количество", factory.createNumberModel());
+        factory.createNewSimpleAttribute(recipeLine, "Количество", factory.getPredefinedModel(NumberModel.NAME));
 
-        //System.out.println(factory.getRootNode().printMetadata(0));
+        System.out.println(factory.getRootNode().printMetadata(0));
     }
 
 }

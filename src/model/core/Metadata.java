@@ -16,7 +16,8 @@ public abstract class Metadata {
     protected ListProperty<Metadata> properties;
     protected Metadata parent;
 
-    protected Metadata(String name, boolean predefined) {
+    protected Metadata(Metadata parent, String name, boolean predefined) {
+        this.parent = parent;
         this.name = new SimpleStringProperty(Objects.requireNonNull(name));
         this.predefined = new ReadOnlyBooleanWrapper(predefined);
         if (predefined) {
@@ -53,21 +54,13 @@ public abstract class Metadata {
         }
     }
 
-    public boolean addAll(Metadata... properties) {
-        boolean result = true;
-        for (Metadata property: properties) {
-            result = add(property) && result;
-        }
-        return result;
-    }
-
     public boolean remove(Metadata property) {
         return propertiesProperty().remove(property);
     }
 
     public String getUniqueName() {
         int counter = 1;
-        boolean isUnique = false;
+        boolean isUnique;
         do {
             isUnique = true;
             for (Metadata property: properties) {
@@ -82,12 +75,12 @@ public abstract class Metadata {
     }
 
     public String printMetadata(int level) {
-        String result = "-".repeat(level) + getName() + "\n";
+        StringBuilder result = new StringBuilder("-".repeat(level) + getName() + "\n");
         level++;
         for (Metadata property: propertiesProperty()) {
-            result += property.printMetadata(level);
+            result.append(property.printMetadata(level));
         }
-        return result;
+        return result.toString();
     }
 
     public Metadata getProperty(String name) {
@@ -95,6 +88,13 @@ public abstract class Metadata {
             if (property.getName().equals(name)) return property;
         }
         return null;
+    }
+
+    public Metadata getRootNode() {
+        if (getParent() == null) {
+            return this;
+        }
+        return getParent().getRootNode();
     }
 
     @Override

@@ -16,8 +16,4 @@ public class MetadataControllerEvent extends Event {
         return new MetadataControllerEvent(SELECTED_METADATA_CHANGED);
     }
 
-    public static MetadataControllerEvent newMetadata() {
-        return new MetadataControllerEvent(NEW_METADATA);
-    }
-
 }

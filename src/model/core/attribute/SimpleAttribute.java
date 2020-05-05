@@ -1,9 +1,11 @@
 package model.core.attribute;
 
+import model.core.Metadata;
 import model.core.model.Model;
+import model.core.node.AttributeNode;
 
 public class SimpleAttribute extends Attribute {
-    public SimpleAttribute(String name, Model type) {
-        super(name, false, type);
+    public SimpleAttribute(Metadata parent, String name, Model type) {
+        super(parent.getProperty(AttributeNode.NAME), name, false, type);
     }
 }

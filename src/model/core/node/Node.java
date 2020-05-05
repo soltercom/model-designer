@@ -3,8 +3,8 @@ package model.core.node;
 import model.core.Metadata;
 
 public abstract class Node extends Metadata {
-    public Node(String name) {
-        super(name, true);
+    public Node(Metadata parent, String name) {
+        super(parent, name, true);
     }
 
     @Override

@@ -23,10 +23,6 @@ public class ControllerFx implements Initializable {
         rootPane.setRight(metadataController.getPropertyForm());
     }
 
-    private void updateNewPropertyForm() {
-        rootPane.setRight(metadataController.getNewPropertyForm());
-    }
-
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         metadataController = MetadataController.getInstance();
@@ -35,7 +31,5 @@ public class ControllerFx implements Initializable {
         metadataController.addEventHandler(MetadataControllerEvent.SELECTED_METADATA_CHANGED,
                 e -> updatePropertyForm());
 
-        metadataController.addEventHandler(MetadataControllerEvent.NEW_METADATA,
-                e -> updateNewPropertyForm());
     }
 }

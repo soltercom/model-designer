@@ -10,8 +10,8 @@ public abstract class Attribute extends Metadata {
 
     private ObjectProperty<Model> type;
 
-    Attribute(String name, boolean predefined, Model type) {
-        super(name, predefined);
+    Attribute(Metadata parent, String name, boolean predefined, Model type) {
+        super(parent, name, predefined);
         this.type = new SimpleObjectProperty<>(type);
     }
 
