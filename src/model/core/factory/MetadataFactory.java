@@ -91,4 +91,20 @@ public class MetadataFactory {
         else
             return null;
     }
+
+    public boolean removeMetadata(Metadata currentMetadata) {
+
+        if (currentMetadata instanceof SimpleModel) {
+            boolean hasReference = getRootNode().hasReferenceOnModel((SimpleModel) currentMetadata);
+            if (!hasReference) currentMetadata.getParent().remove(currentMetadata);
+            return !hasReference;
+        }
+
+        if (currentMetadata instanceof SimpleAttribute) {
+            currentMetadata.getParent().remove(currentMetadata);
+            return true;
+        }
+
+        return false;
+    }
 }

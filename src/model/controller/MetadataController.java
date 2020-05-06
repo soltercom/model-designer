@@ -101,6 +101,7 @@ public class MetadataController {
                 for (Metadata node: model.propertiesProperty()) {
                     if (node instanceof AttributeNode) {
                         TreeItem<Metadata> nodeItem = new TreeItem<>(node);
+                        nodeItem.setExpanded(true);
                         for (Metadata attribute: node.propertiesProperty()) {
                             if (attribute instanceof SimpleAttribute) {
                                 TreeItem<Metadata> attributeItem = new TreeItem<>(attribute);
@@ -139,7 +140,16 @@ public class MetadataController {
             treeView.setRoot(getTreeItems());
             treeView.getSelectionModel().select(getTreeItem(treeView.getRoot(), metadata));
         });
-        contextMenu.getItems().add(itemAdd);
+        MenuItem itemRemove = new MenuItem("Удалить");
+        itemRemove.setOnAction(event -> {
+            Metadata parentMetadata = selectedTreeItem.getValue().getParent();
+            if (MetadataFactory.getInstance().removeMetadata(selectedTreeItem.getValue())) {
+                treeView.setRoot(getTreeItems());
+                treeView.getSelectionModel().select(getTreeItem(treeView.getRoot(), parentMetadata));
+                treeView.refresh();
+            }
+        });
+        contextMenu.getItems().addAll(itemAdd, itemRemove);
         treeView.setContextMenu(contextMenu);
 
         treeView.getSelectionModel().selectedItemProperty().addListener((observableValue, oldValue, newValue) -> {
@@ -168,6 +178,5 @@ public class MetadataController {
                 .addEventHandler(FormEvent.EVENT_FORM_PERSISTED, e -> getTreeView().refresh());
         return new MetadataPane(metadataForm);
     }
-
 
 }

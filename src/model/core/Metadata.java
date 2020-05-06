@@ -102,12 +102,12 @@ public abstract class Metadata {
         if (this == o) return true;
         if (!(o instanceof Metadata)) return false;
         Metadata metadata = (Metadata) o;
-        return getName().equals(metadata.getName());
+        return getName().equals(metadata.getName()) &&
+                Objects.equals(getParent(), metadata.getParent());
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(getName());
+        return Objects.hash(getName(), getParent());
     }
-
 }
