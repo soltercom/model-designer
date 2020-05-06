@@ -1,14 +1,13 @@
 package model.controller;
 
 import formsfx.model.event.FormEvent;
-import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
 import javafx.event.EventHandler;
 import javafx.event.EventType;
 import javafx.scene.control.ContextMenu;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.TreeItem;
 import javafx.scene.control.TreeView;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.BorderPane;
 import model.core.Metadata;
 import model.core.attribute.Attribute;
@@ -19,6 +18,7 @@ import model.core.model.SimpleModel;
 import model.core.node.AttributeNode;
 import model.core.node.RootNode;
 import model.forms.*;
+import model.utils.Images;
 
 import java.util.List;
 import java.util.Map;
@@ -92,19 +92,19 @@ public class MetadataController {
     }
 
     private TreeItem<Metadata> getTreeItems() {
-        TreeItem<Metadata> rootItem = new TreeItem<>(getRootNode());
+        TreeItem<Metadata> rootItem = new TreeItem<>(getRootNode(), Images.DOMAIN_IMAGE);
         rootItem.setExpanded(true);
 
         for (Metadata model: getRootNode().propertiesProperty()) {
             if (model instanceof SimpleModel) {
-                TreeItem<Metadata> modelItem = new TreeItem<>(model);
+                TreeItem<Metadata> modelItem = new TreeItem<>(model, Images.getFolderImage());
                 for (Metadata node: model.propertiesProperty()) {
                     if (node instanceof AttributeNode) {
                         TreeItem<Metadata> nodeItem = new TreeItem<>(node);
                         nodeItem.setExpanded(true);
                         for (Metadata attribute: node.propertiesProperty()) {
                             if (attribute instanceof SimpleAttribute) {
-                                TreeItem<Metadata> attributeItem = new TreeItem<>(attribute);
+                                TreeItem<Metadata> attributeItem = new TreeItem<>(attribute, Images.getCropImage());
                                 nodeItem.getChildren().add(attributeItem);
                             }
                         }
@@ -134,13 +134,13 @@ public class MetadataController {
         TreeView<Metadata> treeView = new TreeView<>(getTreeItems());
 
         final ContextMenu contextMenu = new ContextMenu();
-        MenuItem itemAdd = new MenuItem("Добавить");
+        MenuItem itemAdd = new MenuItem("Добавить", Images.ADD_IMAGE);
         itemAdd.setOnAction(event -> {
             Metadata metadata = MetadataFactory.getInstance().createNewMetadata(selectedTreeItem.getValue());
             treeView.setRoot(getTreeItems());
             treeView.getSelectionModel().select(getTreeItem(treeView.getRoot(), metadata));
         });
-        MenuItem itemRemove = new MenuItem("Удалить");
+        MenuItem itemRemove = new MenuItem("Удалить", Images.REMOVE_IMAGE);
         itemRemove.setOnAction(event -> {
             Metadata parentMetadata = selectedTreeItem.getValue().getParent();
             if (MetadataFactory.getInstance().removeMetadata(selectedTreeItem.getValue())) {
