@@ -25,7 +25,9 @@ public class MetadataPane extends BorderPane implements ViewMixin {
         init();
     }
 
-    public void initializeSelf() {}
+    public void initializeSelf() {
+        getStylesheets().add(FormRenderer.class.getResource("style.css").toExternalForm());
+    }
 
     public void initializeParts() {
         save = new Button("Записать");

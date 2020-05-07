@@ -16,6 +16,8 @@ public class SimpleTextControl extends SimpleControl<StringField> {
     protected Label fieldLabel;
 
     public void initializeParts() {
+        super.initializeParts();
+
         stack = new StackPane();
         editableField = new TextField(field.getValue());
         fieldLabel = new Label(field.labelProperty().getValue());
@@ -28,7 +30,7 @@ public class SimpleTextControl extends SimpleControl<StringField> {
         stack.setAlignment(Pos.CENTER_LEFT);
 
         int columns = field.getSpan();
-        if (columns < 13) {
+        if (columns < 3) {
             int rowIndex = 0;
             add(fieldLabel, 0, rowIndex++, columns, 1);
             add(stack, 0, rowIndex++, columns, 1);

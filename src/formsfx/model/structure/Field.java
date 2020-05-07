@@ -3,6 +3,7 @@ package formsfx.model.structure;
 import formsfx.model.event.FieldEvent;
 import formsfx.view.controls.SimpleControl;
 import javafx.beans.property.*;
+import javafx.collections.FXCollections;
 import javafx.event.EventHandler;
 import javafx.event.EventType;
 import model.core.model.Model;
@@ -16,7 +17,13 @@ public abstract class Field<F extends Field<F>> extends Element<F> implements Fo
 
     protected final StringProperty label = new SimpleStringProperty("");
 
+    protected final StringProperty requiredError = new SimpleStringProperty("");
+    protected final BooleanProperty required = new SimpleBooleanProperty(false);
+
+    protected final BooleanProperty valid = new SimpleBooleanProperty(true);
     protected final BooleanProperty changed = new SimpleBooleanProperty(false);
+
+    protected final ListProperty<String> errorMessages = new SimpleListProperty<>(FXCollections.observableArrayList());
 
     protected SimpleControl<F> renderer;
 
@@ -48,6 +55,25 @@ public abstract class Field<F extends Field<F>> extends Element<F> implements Fo
         return (F) this;
     }
 
+    public F required(boolean newValue) {
+        required.set(newValue);
+        validate();
+
+        return (F) this;
+    }
+
+    public F required(String errorMessage) {
+        required.set(true);
+
+        requiredError.set(errorMessage);
+
+        validate();
+
+        return (F) this;
+    }
+
+    protected abstract boolean validate();
+
     public String getLabel() {
         return label.get();
     }
@@ -62,6 +88,22 @@ public abstract class Field<F extends Field<F>> extends Element<F> implements Fo
 
     public BooleanProperty changedProperty() {
         return changed;
+    }
+
+    public boolean isRequired() {
+        return required.get();
+    }
+
+    public BooleanProperty requiredProperty() {
+        return required;
+    }
+
+    public boolean isValid() {
+        return valid.get();
+    }
+
+    public BooleanProperty validProperty() {
+        return valid;
     }
 
     public SimpleControl<F> getRenderer() {

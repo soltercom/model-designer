@@ -5,6 +5,7 @@ import formsfx.model.structure.Field;
 import formsfx.model.structure.Form;
 import formsfx.model.structure.Group;
 import formsfx.model.structure.ModelField;
+import formsfx.model.validator.RegexValidator;
 import model.core.Metadata;
 import model.core.attribute.Attribute;
 import model.core.model.Model;
@@ -21,8 +22,13 @@ public class AttributeForm extends MetadataForm {
     protected void createForm() {
         formInstance = Form.of(
             Group.of(
-                Field.ofStringType(metadata.nameProperty()).label("Имя"),
-                Field.ofModelType(((Attribute)metadata).typeProperty()).label("Тип")
+                Field.ofStringType(metadata.nameProperty())
+                        .label("Имя")
+                        .required("Не указано имя")
+                        .validate(RegexValidator.forNames("Не верно задано имя")),
+                Field.ofModelType(((Attribute)metadata).typeProperty())
+                    .label("Тип")
+                    .required("Не указан тип")
                     .addEventHandler(FieldEvent.EVENT_FIELD_START_SELECTION, this::onFieldStartSelection)
             )
         ).title("Метаданные");

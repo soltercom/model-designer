@@ -1,15 +1,15 @@
 package formsfx.model.structure;
 
-import javafx.beans.property.IntegerProperty;
-import javafx.beans.property.SimpleIntegerProperty;
-import javafx.beans.property.SimpleStringProperty;
-import javafx.beans.property.StringProperty;
+import javafx.beans.property.*;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 
 import java.util.UUID;
 
 public class Element<E extends Element<E>> {
 
     protected final StringProperty id = new SimpleStringProperty(UUID.randomUUID().toString());
+    protected final ListProperty<String> styleClass = new SimpleListProperty<>(FXCollections.observableArrayList());
     protected final IntegerProperty span = new SimpleIntegerProperty(12);
 
     public E id(String newValue) {
@@ -21,6 +21,12 @@ public class Element<E extends Element<E>> {
         span.setValue(newValue);
         return (E) this;
     }
+
+    public E styleClass(String... newValue) {
+        styleClass.setAll(newValue);
+        return (E) this;
+    }
+
 
     public int getSpan() {
         return span.get();
@@ -37,6 +43,14 @@ public class Element<E extends Element<E>> {
 
     public StringProperty idProperty() {
         return id;
+    }
+
+    public ObservableList<String> getStyleClass() {
+        return styleClass.get();
+    }
+
+    public ListProperty<String> styleClassProperty() {
+        return styleClass;
     }
 
 }

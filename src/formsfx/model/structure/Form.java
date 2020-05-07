@@ -24,6 +24,7 @@ public class Form {
 
     protected final BooleanProperty changed = new SimpleBooleanProperty(false);
     protected final BooleanProperty persistable = new SimpleBooleanProperty(false);
+    protected final BooleanProperty valid = new SimpleBooleanProperty(true);
 
     private final Map<EventType<FormEvent>, List<EventHandler<? super FormEvent>>> eventHandlers = new ConcurrentHashMap<>();
 
@@ -32,6 +33,9 @@ public class Form {
 
         this.groups.forEach(s -> s.changedProperty().addListener((observable, oldValue, newValue) -> setChangedProperty()));
 
+        this.groups.forEach(s -> s.validProperty().addListener((observable, oldValue, newValue) -> setValidProperty()));
+
+        setValidProperty();
         setChangedProperty();
         setPersistableProperty();
 
@@ -72,7 +76,12 @@ public class Form {
     }
 
     protected void setPersistableProperty() {
-        persistable.setValue(groups.stream().anyMatch(Group::hasChanged));
+        persistable.setValue(groups.stream().anyMatch(Group::hasChanged) && groups.stream().allMatch(Group::isValid));
+    }
+
+    protected void setValidProperty() {
+        valid.setValue(groups.stream().allMatch(Group::isValid));
+        setPersistableProperty();
     }
 
     public List<Group> getGroups() {

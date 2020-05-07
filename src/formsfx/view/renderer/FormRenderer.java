@@ -19,11 +19,14 @@ public class FormRenderer extends VBox implements ViewMixin {
         init();
     }
 
+    @Override
+    public String getUserAgentStylesheet() {
+        return FormRenderer.class.getResource("style.css").toExternalForm();
+    }
+
     public void initializeParts() {
         sections = form.getGroups().stream()
-                .map(s -> {
-                        return new GroupRenderer(s);
-                })
+                .map(s -> new GroupRenderer(s))
                 .collect(Collectors.toList());
     }
 

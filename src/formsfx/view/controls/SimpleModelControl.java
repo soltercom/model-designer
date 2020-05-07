@@ -31,7 +31,7 @@ public class SimpleModelControl extends SimpleControl<ModelField> {
         stack.setAlignment(Pos.CENTER_RIGHT);
 
         int columns = field.getSpan();
-        if (columns < 13) {
+        if (columns < 3) {
             int rowIndex = 0;
             add(fieldLabel, 0, rowIndex++, columns, 1);
             add(stack, 0, rowIndex++, columns, 1);

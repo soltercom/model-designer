@@ -17,6 +17,7 @@ public class Group {
 
     protected final List<Element> elements = new ArrayList<>();
 
+    protected final BooleanProperty valid = new SimpleBooleanProperty(true);
     protected final BooleanProperty changed = new SimpleBooleanProperty(false);
 
     private final Map<EventType<GroupEvent>,List<EventHandler<? super GroupEvent>>> eventHandlers = new ConcurrentHashMap<>();
@@ -29,6 +30,12 @@ public class Group {
             .map(e -> (Field) e)
             .forEach(f -> f.changedProperty().addListener((observable, oldValue, newValue) -> setChangedProperty()));
 
+        this.elements.stream()
+                .filter(e -> e instanceof Field)
+                .map(e -> (Field) e)
+                .forEach(f -> f.validProperty().addListener((observable, oldValue, newValue) -> setValidProperty()));
+
+        setValidProperty();
         setChangedProperty();
     }
 
@@ -37,6 +44,10 @@ public class Group {
     }
 
     public void persist() {
+        if (!isValid()) {
+            return;
+        }
+
         elements.stream()
                 .filter(e -> e instanceof FormElement)
                 .map(e -> (FormElement) e)
@@ -61,6 +72,21 @@ public class Group {
                 .filter(e -> e instanceof Field)
                 .map(e -> (Field) e)
                 .anyMatch(Field::hasChanged));
+    }
+
+    private void setValidProperty() {
+        valid.setValue(elements.stream()
+                .filter(e -> e instanceof Field)
+                .map(e -> (Field) e)
+                .allMatch(Field::isValid));
+    }
+
+    public boolean isValid() {
+        return valid.get();
+    }
+
+    public BooleanProperty validProperty() {
+        return valid;
     }
 
     public List<Element> getElements() {
