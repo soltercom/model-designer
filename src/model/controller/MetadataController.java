@@ -7,7 +7,6 @@ import javafx.scene.control.ContextMenu;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.TreeItem;
 import javafx.scene.control.TreeView;
-import javafx.scene.image.ImageView;
 import javafx.scene.layout.BorderPane;
 import model.core.Metadata;
 import model.core.attribute.Attribute;
@@ -18,7 +17,7 @@ import model.core.model.SimpleModel;
 import model.core.node.AttributeNode;
 import model.core.node.RootNode;
 import model.forms.*;
-import model.utils.Images;
+import model.images.Images;
 
 import java.util.List;
 import java.util.Map;

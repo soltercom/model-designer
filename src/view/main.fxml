@@ -1,7 +1,21 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
 
-<BorderPane fx:id="rootPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/10.0.2-internal" xmlns:fx="http://javafx.com/fxml/1"
-    fx:controller="view.ControllerFx"/>
+<BorderPane fx:id="rootPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/10.0.2-internal" xmlns:fx="http://javafx.com/fxml/1" fx:controller="view.ControllerFx">
+   <top>
+      <MenuBar BorderPane.alignment="CENTER">
+         <menus>
+            <Menu mnemonicParsing="false" text="Файл">
+              <items>
+                <MenuItem fx:id="menuNew" mnemonicParsing="false" text="Новый" />
+                <MenuItem fx:id="menuOpen" mnemonicParsing="false" text="Открыть" />
+                <MenuItem fx:id="menuSave" mnemonicParsing="false" text="Сохранить как" />
+              </items>
+            </Menu>
+         </menus>
+      </MenuBar>
+   </top>
+</BorderPane>

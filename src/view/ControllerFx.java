@@ -2,13 +2,20 @@ package view;
 
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.control.Alert;
+import javafx.scene.control.ButtonType;
+import javafx.scene.control.MenuItem;
 import javafx.scene.layout.BorderPane;
+import javafx.stage.FileChooser;
 import model.controller.MetadataController;
 import model.controller.MetadataControllerEvent;
 import model.core.factory.MetadataFactory;
 import model.forms.RootNodeForm;
 import model.test.DemoModel;
+import model.xml.XMLSerialization;
+import test.Tester;
 
+import java.io.File;
 import java.net.URL;
 import java.util.ResourceBundle;
 
@@ -17,10 +24,38 @@ public class ControllerFx implements Initializable {
     @FXML
     private BorderPane rootPane;
 
+    @FXML private MenuItem menuOpen;
+    @FXML private MenuItem menuSave;
+    @FXML private MenuItem menuNew;
+
     private MetadataController metadataController;
 
     private void updatePropertyForm() {
         rootPane.setCenter(metadataController.getPropertyForm());
+    }
+
+    private void setMenuItems() {
+        menuSave.setOnAction(e -> {
+            FileChooser fileChooser = new FileChooser();
+            fileChooser.setTitle("Сохранить файл метаданных");
+            fileChooser.getExtensionFilters().addAll(
+                    new FileChooser.ExtensionFilter("XML Files", "*.xml")
+            );
+            File savedFile = fileChooser.showSaveDialog(rootPane.getScene().getWindow());
+            if (savedFile != null) {
+                if (XMLSerialization.getInstance().serialize(savedFile)) {
+                    Alert alert = new Alert(Alert.AlertType.INFORMATION, savedFile.getAbsolutePath(), ButtonType.OK);
+                    alert.setTitle("Результат операции");
+                    alert.setHeaderText("Метаданные сохранены");
+                    alert.show();
+                } else {
+                    Alert alert = new Alert(Alert.AlertType.ERROR, "", ButtonType.OK);
+                    alert.setTitle("Результат операции");
+                    alert.setHeaderText("Ошибка при сохранени файла");
+                    alert.show();
+                }
+            }
+        });
     }
 
     @Override
@@ -31,5 +66,6 @@ public class ControllerFx implements Initializable {
         metadataController.addEventHandler(MetadataControllerEvent.SELECTED_METADATA_CHANGED,
                 e -> updatePropertyForm());
 
+        setMenuItems();
     }
 }

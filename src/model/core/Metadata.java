@@ -7,6 +7,8 @@ import javafx.collections.FXCollections;
 import javafx.scene.control.TreeItem;
 import model.core.node.Node;
 
+import javax.xml.stream.XMLStreamException;
+import javax.xml.stream.XMLStreamWriter;
 import java.util.Objects;
 
 public abstract class Metadata {
@@ -37,6 +39,7 @@ public abstract class Metadata {
     public StringProperty nameProperty() {
         return name;
     }
+    public boolean isPredefined() { return predefined.get(); }
     public BooleanProperty predefinedProperty() {
         return predefined;
     }
@@ -95,6 +98,16 @@ public abstract class Metadata {
             return this;
         }
         return getParent().getRootNode();
+    }
+
+    public void encode(XMLStreamWriter writer) throws XMLStreamException {
+        writer.writeStartElement(getName());
+        for (Metadata metadata: propertiesProperty()) {
+            if (!metadata.isPredefined()) {
+                metadata.encode(writer);
+            }
+        }
+        writer.writeEndElement();
     }
 
     @Override
