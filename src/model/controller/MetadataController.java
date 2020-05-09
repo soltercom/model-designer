@@ -26,12 +26,12 @@ import java.util.concurrent.CopyOnWriteArrayList;
 
 public class MetadataController {
 
-    private final Metadata rootNode;
+    private Metadata rootNode;
     private Metadata getRootNode() {
         return rootNode;
     }
     private TreeView<Metadata> treeView;
-    public TreeView<Metadata> getTreeView() {
+    private TreeView<Metadata> getTreeView() {
         if (treeView == null) {
             treeView = initTreeView();
         }
@@ -49,6 +49,18 @@ public class MetadataController {
             instance = new MetadataController();
         }
         return instance;
+    }
+
+    public TreeView<Metadata> newRootNode() {
+        rootNode = MetadataFactory.getInstance().newRootNode();
+        treeView = initTreeView();
+        return getTreeView();
+    }
+
+    public TreeView<Metadata> openRootNode() {
+        rootNode = MetadataFactory.getInstance().getRootNode();
+        treeView = initTreeView();
+        return getTreeView();
     }
 
     protected final Map<EventType<MetadataControllerEvent>, List<EventHandler<? super MetadataControllerEvent>>> eventHandlers = new ConcurrentHashMap<>();

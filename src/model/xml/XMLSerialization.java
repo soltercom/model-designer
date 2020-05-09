@@ -1,16 +1,19 @@
 package model.xml;
 
-import model.core.Metadata;
 import model.core.factory.MetadataFactory;
-import model.core.model.Model;
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+import org.w3c.dom.Node;
+import org.xml.sax.SAXException;
 
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.stream.XMLOutputFactory;
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamWriter;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.util.List;
 
 public class XMLSerialization {
 
@@ -24,7 +27,6 @@ public class XMLSerialization {
     }
 
     public boolean serialize(File file) {
-
         MetadataFactory metadata = MetadataFactory.getInstance();
 
         try {
@@ -41,6 +43,21 @@ public class XMLSerialization {
         }
 
         return true;
+    }
+
+    public boolean deserialize(File file) {
+
+        Document document = null;
+        try {
+            document = DocumentBuilderFactory.newInstance().newDocumentBuilder().parse(file);
+        } catch (SAXException | IOException | ParserConfigurationException e) {
+            e.printStackTrace();
+        }
+
+        if (document == null) return false;
+
+        return MetadataFactory.getInstance().deserialize(document.getDocumentElement());
+
     }
 
 }

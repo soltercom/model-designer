@@ -9,8 +9,11 @@ import model.core.model.*;
 import model.core.node.AttributeNode;
 import model.core.node.Node;
 import model.core.node.RootNode;
+import org.w3c.dom.Element;
+import org.w3c.dom.NodeList;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Optional;
 
@@ -19,8 +22,12 @@ public class MetadataFactory {
     private RootNode root;
     public RootNode getRootNode() {
         if (root == null) {
-            root = new RootNode("Метаданные");
+            root = new RootNode(RootNode.NAME);
         }
+        return root;
+    }
+    public RootNode newRootNode() {
+        root = new RootNode("Метаданные");
         return root;
     }
 
@@ -106,5 +113,37 @@ public class MetadataFactory {
         }
 
         return false;
+    }
+
+    private HashMap<String, Model> deserializeModels(Element documentElement) {
+        HashMap<String, Model> modelMap = new HashMap<>();
+        for (int i = 0; i < documentElement.getChildNodes().getLength(); i++) {
+            Element modelElement = (Element) documentElement.getChildNodes().item(i);
+            modelMap.put(modelElement.getTagName(), createNewSimpleModel(modelElement.getTagName()));
+        }
+        return modelMap;
+    }
+
+    public void deserializeAttributes(Element documentElement, HashMap<String, Model> modelMap) {
+        NodeList listNode = documentElement.getElementsByTagName(AttributeNode.NAME);
+        for (int i = 0; i < listNode.getLength(); i++) {
+            Element attributeNode = (Element) listNode.item(i);
+            SimpleModel model = (SimpleModel) modelMap.get(attributeNode.getParentNode().getNodeName());
+            for (int j = 0; j < attributeNode.getChildNodes().getLength(); j++) {
+                Element attribute = (Element) attributeNode.getChildNodes().item(j);
+                String typeAttribute = attribute.getAttribute("type");
+                Model type = modelMap.get(typeAttribute);
+                if (type == null) {
+                    type = getPredefinedModel(typeAttribute);
+                }
+                createNewSimpleAttribute(model, attribute.getTagName(), type);
+            }
+        }
+    }
+
+    public boolean deserialize(Element documentElement) {
+        root = new RootNode(documentElement.getTagName());
+        deserializeAttributes(documentElement, deserializeModels(documentElement));
+        return true;
     }
 }

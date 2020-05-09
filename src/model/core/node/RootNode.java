@@ -13,6 +13,8 @@ import java.util.stream.Collectors;
 
 public class RootNode extends Node {
 
+    public static final String NAME = "Метаданные";
+
     public RootNode(String name) {
         super(null, name);
 

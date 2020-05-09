@@ -9,11 +9,7 @@ import javafx.scene.layout.BorderPane;
 import javafx.stage.FileChooser;
 import model.controller.MetadataController;
 import model.controller.MetadataControllerEvent;
-import model.core.factory.MetadataFactory;
-import model.forms.RootNodeForm;
-import model.test.DemoModel;
 import model.xml.XMLSerialization;
-import test.Tester;
 
 import java.io.File;
 import java.net.URL;
@@ -56,12 +52,26 @@ public class ControllerFx implements Initializable {
                 }
             }
         });
+        menuOpen.setOnAction(e -> {
+            FileChooser fileChooser = new FileChooser();
+            fileChooser.setTitle("Открыть файл метаданных");
+            fileChooser.getExtensionFilters().addAll(
+                    new FileChooser.ExtensionFilter("XML Files", "*.xml")
+            );
+            File openedFile = fileChooser.showOpenDialog(rootPane.getScene().getWindow());
+            if (openedFile != null) {
+                if (XMLSerialization.getInstance().deserialize(openedFile)) {
+                    rootPane.setLeft(metadataController.openRootNode());
+                }
+            }
+        });
+        menuNew.setOnAction(e -> rootPane.setLeft(metadataController.newRootNode()));
     }
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         metadataController = MetadataController.getInstance();
-        rootPane.setLeft(metadataController.getTreeView());
+        rootPane.setLeft(metadataController.newRootNode());
 
         metadataController.addEventHandler(MetadataControllerEvent.SELECTED_METADATA_CHANGED,
                 e -> updatePropertyForm());
