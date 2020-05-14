@@ -1,13 +1,14 @@
 package model.controller;
 
-import formsfx.model.event.FormEvent;
+import form.Form;
+import form.FormEvent;
 import javafx.event.EventHandler;
 import javafx.event.EventType;
 import javafx.scene.control.ContextMenu;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.TreeItem;
 import javafx.scene.control.TreeView;
-import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.Pane;
 import model.core.Metadata;
 import model.core.attribute.Attribute;
 import model.core.attribute.SimpleAttribute;
@@ -16,7 +17,6 @@ import model.core.model.Model;
 import model.core.model.SimpleModel;
 import model.core.node.AttributeNode;
 import model.core.node.RootNode;
-import model.forms.*;
 import model.images.Images;
 
 import java.util.List;
@@ -171,23 +171,26 @@ public class MetadataController {
         return treeView;
     }
 
-    public BorderPane getPropertyForm() {
+    public Pane getPropertyForm() {
         return getPropertyForm(selectedTreeItem == null? null: selectedTreeItem.getValue());
     }
 
-    private BorderPane getPropertyForm(Metadata metadata) {
-        MetadataForm metadataForm;
-        if (metadata instanceof RootNode)
-            metadataForm = new RootNodeForm(metadata);
-        else if (metadata instanceof Model)
-            metadataForm = new ModelForm(metadata);
-        else if (metadata instanceof Attribute)
-            metadataForm = new AttributeForm((Attribute) metadata);
-        else return new BorderPane();
+    private Pane getPropertyForm(Metadata metadata) {
+        Form form;
+        if (metadata instanceof RootNode) {
+            form = new Form<RootNode>((RootNode)metadata);
+        } else if (metadata instanceof Model) {
+            form = new Form<Model>((Model)metadata);
+        } else if (metadata instanceof Attribute) {
+            form = new Form<Attribute>((Attribute)metadata);
+        } else {
+            return Form.empty();
+        }
 
-        metadataForm.getFormInstance()
-                .addEventHandler(FormEvent.EVENT_FORM_PERSISTED, e -> getTreeView().refresh());
-        return new MetadataPane(metadataForm);
+        form.addEventHandler(FormEvent.FORM_EVENT_PERSISTED, e -> {
+            getTreeView().refresh();
+        });
+        return form;
     }
 
 }

@@ -1,5 +1,7 @@
 package model.core.model;
 
+import form.validator.ValidateProperty;
+import form.validator.ValidatorType;
 import model.core.Metadata;
 import model.core.attribute.Attribute;
 

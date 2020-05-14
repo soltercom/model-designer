@@ -1,10 +1,10 @@
 package model.core;
 
-import formsfx.model.structure.Group;
-import javafx.beans.binding.Bindings;
+import form.FormProperty;
+import form.validator.ValidateProperty;
+import form.validator.ValidatorType;
 import javafx.beans.property.*;
 import javafx.collections.FXCollections;
-import javafx.scene.control.TreeItem;
 import model.core.node.Node;
 
 import javax.xml.stream.XMLStreamException;
@@ -13,6 +13,7 @@ import java.util.Objects;
 
 public abstract class Metadata {
 
+    @FormProperty @ValidateProperty(types = {ValidatorType.STRING_REQUIRED, ValidatorType.NAME})
     protected StringProperty name;
     protected BooleanProperty predefined;
     protected ListProperty<Metadata> properties;

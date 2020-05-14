@@ -1,5 +1,8 @@
 package model.core.attribute;
 
+import form.FormProperty;
+import form.validator.ValidateProperty;
+import form.validator.ValidatorType;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.StringProperty;
@@ -11,6 +14,7 @@ import javax.xml.stream.XMLStreamWriter;
 
 public abstract class Attribute extends Metadata {
 
+    @FormProperty @ValidateProperty(types = {ValidatorType.MODEL_REQUIRED})
     private ObjectProperty<Model> type;
 
     Attribute(Metadata parent, String name, boolean predefined, Model type) {
